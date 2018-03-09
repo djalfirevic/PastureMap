@@ -23,4 +23,6 @@ public struct Placeholders {
 public struct Buttons {
     static let no = "No"
     static let yes = "Yes"
+    static let draw = "Draw"
+    static let stop = "Stop"
 }

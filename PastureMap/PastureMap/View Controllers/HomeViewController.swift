@@ -25,12 +25,13 @@ class HomeViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func drawButtonTapped() {
-        isDrawing = !isDrawing
-        
-        mapView.isUserInteractionEnabled = !isDrawing
-        drawBarButtonItem.title = isDrawing ? "Stop" : "Draw"
-        
-        if !isDrawing {
+        if drawBarButtonItem.title == Buttons.draw {
+            mapView.isUserInteractionEnabled = false
+            drawBarButtonItem.title = Buttons.stop
+        } else {
+            mapView.isUserInteractionEnabled = true
+            drawBarButtonItem.title = Buttons.draw
+            isDrawing = false
             drawPolyline()
         }
     }
@@ -43,11 +44,12 @@ class HomeViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if !isDrawing { return }
-        
-        swiped = false
         if let touch = touches.first {
-            lastPoint = touch.location(in: mapView)
+            if mapView.point(inside: touch.location(in: mapView), with: event) {
+                isDrawing = true
+                swiped = false
+                lastPoint = touch.location(in: mapView)
+            }
         }
     }
     
@@ -70,6 +72,7 @@ class HomeViewController: UIViewController {
             drawLineFrom(lastPoint, toPoint: lastPoint)
         }
         
+        isDrawing = false
         drawPolyline()
     }
     
